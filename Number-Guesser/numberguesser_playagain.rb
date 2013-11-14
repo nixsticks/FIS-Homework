@@ -15,7 +15,7 @@ class GuessingGame
   end
 
   def result
-    puts @guess == @answer ? "Correct!" : "Wrong!"
+    puts @guess == @answer ? "Correct!" : "Wrong! Sorry, I was thinking of #{@answer}."
   end
 
   def play_again
@@ -37,7 +37,6 @@ class GuessingGame
     guess
     answer
     result
-    puts "Sorry, I was really thinking of #{@answer}."
     play_again
   end
 end
