@@ -38,9 +38,9 @@ class GuessingGame
 
   def higher_lower
     if @latest > @answer
-      puts "Sorry, my number is lower than that."
+      puts "It's lower than that."
     else
-      puts "Sorry, my number is higher than that."
+      puts "It's higher than that."
     end
   end
 
