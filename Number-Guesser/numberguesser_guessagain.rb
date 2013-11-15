@@ -24,8 +24,8 @@ class GuessingGame
   def result
     guess
 
-    @latest = @guesses.last
-    @second_latest = @guesses.last - 1
+    @latest = @guesses[@turns-1]
+    @second_latest = @guesses[@turns- 2]
 
     if @latest == @answer
       puts "Correct!"
@@ -45,7 +45,7 @@ class GuessingGame
   end
 
   def warmer_colder
-    if (@latest - @answer).abs < (@second_latest - @answer).abs
+    if (@answer - @latest).abs < (@answer - @second_latest).abs
       puts "But you're getting warmer..."
       result
     else
