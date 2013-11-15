@@ -1,51 +1,55 @@
 class GuessingGame
-
   def initialize
     @guesses = []
     @answer
     @turns = 0
-    @latest
-    @second_latest
+    @last_guess
+    @second_last_guess
   end
 
   def welcome
     puts "\nGuess what number I am thinking of. Pick a number from 1 to 100."
   end
 
-  def guess
-    @guesses << gets.chomp.to_i
+  def add_turn
     @turns += 1
+  end
+
+  def last_two_guesses
+    @last_guess = @guesses[@turns-1]
+    @second_last_guess = @guesses[@turns- 2]
+  end
+
+  def guess
+    get_an_integer
+    add_turn
+    last_two_guesses
+  end
+
+  def get_an_integer
+    input = gets.chomp
+    if input.match(/\D/) || input.to_i > 100
+      puts "Please enter a number between 1 and 100."
+      get_an_integer
+    else
+      @guesses << input.to_i
+    end
   end
 
   def answer
     @answer = rand(1..100)
   end
 
-  def result
-    guess
-
-    @latest = @guesses[@turns-1]
-    @second_latest = @guesses[@turns- 2]
-
-    if @latest == @answer
-      puts "Correct!"
-      play_again
-    else
-      higher_lower
-      @turns > 1 ? warmer_colder : result
-    end
-  end
-
-  def higher_lower
-    if @latest > @answer
+  def higher_or_lower
+    if @last_guess > @answer
       puts "It's lower than that."
     else
       puts "It's higher than that."
     end
   end
 
-  def warmer_colder
-    if (@answer - @latest).abs < (@answer - @second_latest).abs
+  def warmer_or_colder
+    if (@answer - @last_guess).abs < (@answer - @second_last_guess).abs
       puts "But you're getting warmer..."
       result
     else
@@ -54,11 +58,23 @@ class GuessingGame
     end
   end
 
+  def result
+    guess
+
+    case @last_guess
+    when @answer
+      puts "Correct!"
+      play_again
+    else
+      higher_or_lower
+      @turns > 1 ? warmer_or_colder : result
+    end
+  end
+
   def play_again
     puts "\nWould you like to play again?"
-    again = gets.chomp.downcase
 
-    case again
+    case gets.chomp.downcase
     when "y", "yes"
       @turns = 0
       @guesses = []
