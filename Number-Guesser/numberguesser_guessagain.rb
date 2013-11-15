@@ -60,6 +60,8 @@ class GuessingGame
 
     case again
     when "y", "yes"
+      @turns = 0
+      @guesses = []
       run
     when "n", "no"
       exit
