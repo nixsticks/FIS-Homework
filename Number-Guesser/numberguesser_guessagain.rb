@@ -1,24 +1,57 @@
 class GuessingGame
 
+  def initialize
+    @guesses = []
+    @answer
+    @turns = 0
+    @latest
+    @second_latest
+  end
+
   def welcome
     puts "\nGuess what number I am thinking of. Pick a number from 1 to 100."
   end
 
   def guess
-    gets.chomp.to_i
-  end
-
-  def guess_again
-    puts "Wrong, guess again."
-    result
+    @guesses << gets.chomp.to_i
+    @turns += 1
   end
 
   def answer
-    rand(1..100)
+    @answer = rand(1..100)
   end
 
   def result
-    puts guess == answer ? "Correct!" : guess_again
+    guess
+
+    @latest = @guesses.last
+    @second_latest = @guesses.last - 1
+
+    if @latest == @answer
+      puts "Correct!"
+      play_again
+    else
+      higher_lower
+      @turns > 1 ? warmer_colder : result
+    end
+  end
+
+  def higher_lower
+    if @latest > @answer
+      puts "Sorry, my number is lower than that."
+    else
+      puts "Sorry, my number is higher than that."
+    end
+  end
+
+  def warmer_colder
+    if (@latest - @answer).abs < (@second_latest - @answer).abs
+      puts "But you're getting warmer..."
+      result
+    else
+      puts "And you're getting colder..."
+      result
+    end
   end
 
   def play_again
@@ -38,8 +71,8 @@ class GuessingGame
 
   def run
     welcome
+    answer
     result
-    play_again
   end
 end
 
