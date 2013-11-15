@@ -1,8 +1,20 @@
 class GuessingGame
 
-  def guess
+  def initialize
+    @guess
+  end
+
+  def welcome
     puts "\nGuess what number I am thinking of. Pick a number from 1 to 100."
-    gets.chomp.to_i
+  end
+
+  def guess
+    @guess = gets.chomp.to_i
+  end
+
+  def guess_again
+    puts "Wrong, guess again."
+    result
   end
 
   def answer
@@ -10,7 +22,7 @@ class GuessingGame
   end
 
   def result
-    puts guess == answer ? "Correct!" : "Wrong! Sorry, I was thinking of #{answer}."
+    puts guess == answer ? "Correct!" : guess_again
   end
 
   def play_again
@@ -29,6 +41,7 @@ class GuessingGame
   end
 
   def run
+    welcome
     result
     play_again
   end
