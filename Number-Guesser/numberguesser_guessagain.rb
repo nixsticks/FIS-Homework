@@ -28,7 +28,7 @@ class GuessingGame
 
   def get_an_integer
     input = gets.chomp
-    if input.match(/\D/) || input.to_i > 100
+    if input.match(/\D/) || input.to_i > 100 || input.empty?
       puts "Please enter a number between 1 and 100."
       get_an_integer
     else
