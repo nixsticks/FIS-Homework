@@ -16,9 +16,7 @@ def coupon_clearance
   COUPS.each do |coupon|
     ITEMS.each do |item|
       item.each do |name, values|
-        if name == coupon[:item] && values[:clearance]
-          coupon[:cost] = coupon[:cost] * 0.8
-        end
+        coupon[:cost] = coupon[:cost] * 0.8 if name == coupon[:item] && values[:clearance]
       end
     end
   end
@@ -42,7 +40,7 @@ def updateCart(cart)
   cart.uniq
 end
 
-def generateCoups(cart)
+def generateCoups
   coups = []
   rand(2).times do
     coups.push(COUPS.sample)
@@ -106,3 +104,21 @@ def checkout(cart, coupons)
   
   cost
 end
+
+a = generateCart
+b = generateCoups
+
+puts "This is the cart..."
+p a
+puts
+puts "These are the coupons..."
+p b
+
+c = updateCart(a)
+puts
+puts "This is the updated cart..."
+p c 
+
+puts 
+puts "This is the total cost..."
+puts checkout(c,b)
