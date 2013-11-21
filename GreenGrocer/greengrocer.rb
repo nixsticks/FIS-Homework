@@ -104,21 +104,3 @@ def checkout(cart, coupons)
   
   cost
 end
-
-a = generateCart
-b = generateCoups
-
-puts "This is the cart..."
-p a
-puts
-puts "These are the coupons..."
-p b
-
-c = updateCart(a)
-puts
-puts "This is the updated cart..."
-p c 
-
-puts 
-puts "This is the total cost..."
-puts checkout(c,b)
