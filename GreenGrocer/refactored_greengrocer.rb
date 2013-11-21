@@ -1,19 +1,19 @@
-ITEMS = [  {"AVOCADO" => {:price => 3.00, :clearance => true}},
-    {"KALE" => {:price => 3.00,:clearance => false}},
-    {"BLACK_BEANS" => {:price => 2.50,:clearance => false}},
-    {"ALMONDS" => {:price => 9.00, :clearance => false}},
-    {"TEMPEH" => {:price => 3.00,:clearance => true}},
-    {"CHEESE" => {:price => 6.50,:clearance => false}},
-    {"BEER" => {:price => 13.00, :clearance => false}},
-    {"PEANUTBUTTER" => {:price => 3.00,:clearance => true}},
-    {"BEETS" => {:price => 2.50,:clearance => false}}]
+ITEMS = [  {"AVOCADO" => {:price => 3.00, :clearance_items => true}},
+    {"KALE" => {:price => 3.00,:clearance_items => false}},
+    {"BLACK_BEANS" => {:price => 2.50,:clearance_items => false}},
+    {"ALMONDS" => {:price => 9.00, :clearance_items => false}},
+    {"TEMPEH" => {:price => 3.00,:clearance_items => true}},
+    {"CHEESE" => {:price => 6.50,:clearance_items => false}},
+    {"BEER" => {:price => 13.00, :clearance_items => false}},
+    {"PEANUTBUTTER" => {:price => 3.00,:clearance_items => true}},
+    {"BEETS" => {:price => 2.50,:clearance_items => false}}]
 
 COUPS = [  {:item=>"AVOCADO", :num=>2, :cost=>5.00},
     {:item=>"BEER", :num=>2, :cost=>20.00},
     {:item=>"CHEESE", :num=>3, :cost=>15.00}]
 
 #randomly generates a cart of items
-def generateCart
+def generate_cart
   cart = []
   rand(1..20).times do
     cart.push(ITEMS.sample)  
@@ -22,8 +22,8 @@ def generateCart
 end
 
 #randomly generates set of coupons
-def generateCoups
-  updateCoups
+def generate_coupons
+  update_coupons_for_discount
   coups = []
   rand(2).times do
     coups.push(COUPS.sample)
@@ -32,18 +32,18 @@ def generateCoups
 end
 
 #updates coupons to reflect discount
-def updateCoups
+def update_coupons_for_discount
   COUPS.each do |coupon|
     ITEMS.each do |items|
       items.each do |name, attributes|
-        coupon[:cost] = coupon[:cost] * 0.8 if coupon[:item] == name && attributes[:clearance] == true
+        coupon[:cost] = coupon[:cost] * 0.8 if coupon[:item] == name && attributes[:clearance_items] == true
       end
     end
   end
 end
 
 #returns count of items in cart
-def uniqCart(cart)
+def count_cart_items(cart)
   counts = {}
   cart.each do |item|
     item.each do |name, attributes|
@@ -54,7 +54,7 @@ def uniqCart(cart)
 end
 
 #adds count to the items in the cart
-def updateCart(cart, counts)
+def update_cart_counts(cart, counts)
   cart.uniq!
   cart.each do |item|
     item.each do |name, attributes|
@@ -66,16 +66,15 @@ def updateCart(cart, counts)
 end
 
 #changes price for couponed items
-def couponItems(cart, coupons)
+def coupon_items(cart, coupons)
   cost = 0
   cart.each do |item|
     item.each do |name, attributes|
       unless coupons.nil?
         coupons.each do |coupon|
           if name == coupon[:item] && attributes[:count] >= coupon[:num]
-            disc_number = attributes[:count]/coupon[:num]
-            cost += coupon[:cost] * disc_number
-            attributes[:count] -= coupon[:num] * disc_number
+            cost += coupon[:cost] * (attributes[:count]/coupon[:num])
+            attributes[:count] = attributes[:count] % coupon[:num]
           end
         end
       end
@@ -84,15 +83,24 @@ def couponItems(cart, coupons)
   cost
 end
 
-#gives clearance discount and normal cost
-def clearance(cart, cost)
+#gives clearance_items discount
+def clearance_items(cart, cost)
   cart.each do |item|
     item.each do |name, attribute|
       if attribute[:clearance]
         cost += (attribute[:price] * attribute[:count]) * 0.8
-      else
-        cost += attribute[:price] * attribute[:count]
+        attribute[:count] = 0
       end
+    end
+  end
+  cost
+end
+
+#gives cost of normal items
+def full_price_items(cart, cost)
+  cart.each do |item|
+    item.each do |name,attribute|
+      cost += (attribute[:price] * attribute[:count])
     end
   end
   cost
@@ -112,16 +120,17 @@ def over_5_discount(cart, cost)
 end
 
 def checkout(cart, coupons)
-  no_coupons = couponItems(cart, coupons)
-  clearance = clearance(cart, no_coupons)
-  over_5_discount(cart, clearance)
+  no_coupons = coupon_items(cart, coupons)
+  clearance_items = clearance_items(cart, no_coupons)
+  total = full_price_items(cart, clearance_items)
+  over_5_discount(cart, total)
 end
 
 ##the cart is currently an array of individual items, translate it into a hash that includes the counts for each item
-  # For example if your cart was [  {"AVOCADO" => {:price => 3.00, :clearance => true}}, {"AVOCADO" => {:price => 3.00, :clearance => true}}]
-  # it would become {"AVOCADO" => {:price => 3.00, :clearance => true}, :count => 2}
+  # For example if your cart was [  {"AVOCADO" => {:price => 3.00, :clearance_items => true}}, {"AVOCADO" => {:price => 3.00, :clearance_items => true}}]
+  # it would become {"AVOCADO" => {:price => 3.00, :clearance_items => true}, :count => 2}
 ##create a checkout method that calculates the total cost of the cart
 ##when checking out, check the coupons and apply the discount if the proper number of items is present
-##if any of the items are on clearance add a 20% discount
+##if any of the items are on clearance_items add a 20% discount
 ##if the customer has 2 of the same coupon, triple the discount
 ##if none of the items purchased have a unit price greater than 5$ give the customer a 10$ discount off the whole cart

@@ -1,8 +1,8 @@
 require './refactored_greengrocer'
 
-describe '#updateCart' do
-  let(:old_cart) {generateCart}
-  let(:updated_cart) {updateCart(old_cart, uniqCart(old_cart))}
+describe '#update_cart' do
+  let(:old_cart) {generate_cart}
+  let(:updated_cart) {update_cart_counts(old_cart, count_cart_items(old_cart))}
   n = 0
   before do 
     updated_cart.each do |item|
@@ -41,7 +41,7 @@ describe '#checkout' do
     let(:coups) {[  {:item=>"AVOCADO", :num=>2, :cost=>4.00}]}
 
     it 'should calculate price with discounts and full price for extra items' do
-      expect(checkout(cart, coups)).to eq(27.4)
+      expect(checkout(cart, coups)).to eq(5+3+9+4+4+2.4)
     end
   end
 
