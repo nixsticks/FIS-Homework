@@ -78,9 +78,8 @@ def checkout(cart, coupons)
       unless coupons.nil?
         coupons.each do |coupon|
           if name == coupon[:item] && attribute[:count] >= coupon[:num]
-            disc_number = attribute[:count]/coupon[:num]
-            cost += coupon[:cost] * disc_number
-            attribute[:count] -= coupon[:num] * disc_number
+            cost += coupon[:cost] * (attribute[:count]/coupon[:num])
+            attribute[:count] = attribute[:count] % coupon[:num]
           end
         end
       end
