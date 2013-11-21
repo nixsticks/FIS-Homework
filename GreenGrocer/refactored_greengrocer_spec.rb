@@ -41,7 +41,7 @@ describe '#checkout' do
     let(:coups) {[  {:item=>"AVOCADO", :num=>2, :cost=>4.00}]}
 
     it 'should calculate price with discounts and full price for extra items' do
-      expect(checkout(cart, coups)).to eq(5+3+9+4+4+2.4)
+      expect(checkout(cart, coups)).to eq(27.4)
     end
   end
 

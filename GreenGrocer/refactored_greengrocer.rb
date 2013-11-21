@@ -23,16 +23,17 @@ end
 
 #randomly generates set of coupons
 def generate_coupons
-  update_coupons_for_discount
+  update_coupons_for_clearance_discount
   coups = []
   rand(2).times do
     coups.push(COUPS.sample)
   end
+  update_coupons_for_triple_discount(coups) if coups.size == 2
   coups
 end
 
 #updates coupons to reflect discount
-def update_coupons_for_discount
+def update_coupons_for_clearance_discount
   COUPS.each do |coupon|
     ITEMS.each do |items|
       items.each do |name, attributes|
@@ -40,6 +41,27 @@ def update_coupons_for_discount
       end
     end
   end
+end
+
+#update coupons for triple discount
+def update_coupons_for_triple_discount(coupons)
+  if coupons[0] = coupons[1]
+    coupons.delete_at(1)
+
+    coupon = coupons[0]
+
+    ITEMS.each do |items|
+      items.each do |name, attributes|
+        if coupon[:item] == name
+          real_price = attributes[:price] * coupon[:num]
+          new_price = coupon[:cost]
+          percentage_discount = (real_price - new_price)/real_price
+          coupon[:cost] = coupon[:cost] * (1 - (percentage_discount * 3))
+        end
+      end
+    end
+  end
+  coupons
 end
 
 #returns count of items in cart

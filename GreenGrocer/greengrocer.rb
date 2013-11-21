@@ -23,7 +23,6 @@ def coupon_clearance
 end
 
 def generateCart
-  coupon_clearance
   cart = []
   rand(1..20).times do
     cart.push(ITEMS.sample)  
@@ -41,35 +40,36 @@ def updateCart(cart)
 end
 
 def generateCoups
+  coupon_clearance
   coups = []
   rand(2).times do
     coups.push(COUPS.sample)
   end
   coups
-  # unless coups.empty?
-  #   tripleDiscount(coups)
-  # else
-  #   coups
-  # end
+  update_coupons_for_triple_discount(coups) if coups.size == 2
+  # added logic even though coupon number can never be 2...
+  coups
 end
 
-# def tripleDiscount(coupons)
-#   if coupons.size == 2 && coupons[0] == coupons[1]
-#     coupons[0][:double] = true
-#     coupons.delete_at(1)
-#     coupon = coupons[0]
-#     ITEMS.each do |item|
-#       item.each do |name, attributes|
-#         if name == coupon[:item]
-#           original = (attributes[:price] * coupon[:num])
-#           discount = (original - coupon[:price])/original
-#           coupon[:price] = original * (discount * 3)
-#         end
-#       end
-#     end
-#   end
-#   coupons
-# end
+def update_coupons_for_triple_discount(coupons)
+  if coupons[0] = coupons[1]
+    coupons.delete_at(1)
+
+    coupon = coupons[0]
+
+    ITEMS.each do |items|
+      items.each do |name, attributes|
+        if coupon[:item] == name
+          real_price = attributes[:price] * coupon[:num]
+          new_price = coupon[:cost]
+          percentage_discount = (real_price - new_price)/real_price
+          coupon[:cost] = coupon[:cost] * (1 - (percentage_discount * 3))
+        end
+      end
+    end
+  end
+  coupons
+end
 
 def checkout(cart, coupons)
   cost = 0.00
