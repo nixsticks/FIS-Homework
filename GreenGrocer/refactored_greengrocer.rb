@@ -95,8 +95,8 @@ def coupon_items(cart, coupons)
       unless coupons.nil?
         coupons.each do |coupon|
           if name == coupon[:item] && attributes[:count] >= coupon[:num]
-            cost += coupon[:cost] * (attributes[:count]/coupon[:num])
-            attributes[:count] = attributes[:count] % coupon[:num]
+            cost += coupon[:cost]
+            attributes[:count] = attributes[:count] - coupon[:num]
           end
         end
       end
@@ -147,12 +147,3 @@ def checkout(cart, coupons)
   total = full_price_items(cart, clearance_items)
   over_5_discount(cart, total)
 end
-
-##the cart is currently an array of individual items, translate it into a hash that includes the counts for each item
-  # For example if your cart was [  {"AVOCADO" => {:price => 3.00, :clearance_items => true}}, {"AVOCADO" => {:price => 3.00, :clearance_items => true}}]
-  # it would become {"AVOCADO" => {:price => 3.00, :clearance_items => true}, :count => 2}
-##create a checkout method that calculates the total cost of the cart
-##when checking out, check the coupons and apply the discount if the proper number of items is present
-##if any of the items are on clearance_items add a 20% discount
-##if the customer has 2 of the same coupon, triple the discount
-##if none of the items purchased have a unit price greater than 5$ give the customer a 10$ discount off the whole cart

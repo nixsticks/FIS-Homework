@@ -1,3 +1,5 @@
+require 'awesome_print'
+
 ITEMS = [  {"AVOCADO" => {:price => 3.00, :clearance => true}},
     {"KALE" => {:price => 3.00,:clearance => false}},
     {"BLACK_BEANS" => {:price => 2.50,:clearance => false}},
@@ -38,6 +40,10 @@ def updateCart(cart)
   end
   cart.uniq
 end
+# when i pass in a hard coded cart, it doesnt work because i expect to only alter one avocado at a time, but it alters multiple, so the second
+# time through the loop we don't match avocados and we reset only that one to have a count of 1
+
+ap updateCart([{"CHEESE"=>{:price=>6.5, :clearance=>false}}, {"AVOCADO"=>{:price=>3.0, :clearance=>true}}, {"AVOCADO"=>{:price=>3.0, :clearance=>true}}, {"KALE"=>{:price=>3.0, :clearance=>false}}, {"BEER"=>{:price=>13.0, :clearance=>false}}])
 
 def generateCoups
   coupon_clearance
