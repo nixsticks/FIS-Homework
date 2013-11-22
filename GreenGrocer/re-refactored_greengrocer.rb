@@ -23,7 +23,6 @@ end
 
 #randomly generates set of coupons
 def generate_coupons
-  update_coupons_for_clearance_discount
   coups = []
   rand(2).times do
     coups.push(COUPS.sample)
@@ -31,17 +30,6 @@ def generate_coupons
   update_coupons_for_triple_discount(coups) if coups.size == 2
   coups
 end
-
-#updates coupons to reflect discount
-# def update_coupons_for_clearance_discount
-#   COUPS.each do |coupon|
-#     ITEMS.each do |items|
-#       items.each do |name, attributes|
-#         coupon[:cost] = coupon[:cost] * 0.8 if coupon[:item] == name && attributes[:clearance_items] == true
-#       end
-#     end
-#   end
-# end
 
 #update coupons for triple discount
 def update_coupons_for_triple_discount(coupons)
