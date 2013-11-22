@@ -1,4 +1,4 @@
-require './refactored_greengrocer'
+require './re-refactored_greengrocer'
 
 describe '#update_cart' do
   let(:old_cart) {generate_cart}
