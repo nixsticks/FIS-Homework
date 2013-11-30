@@ -53,26 +53,35 @@ def update_coupons_for_triple_discount(coupons)
 end
 
 #returns count of items in cart
-def count_cart_items(cart)
-  counts = {}
-  cart.each do |item|
-    item.each do |name, attributes|
-      counts[name] = cart.select{|other_item| other_item == item}.size
-    end
-  end
-  counts
-end
+# def count_cart_items(cart)
+#   counts = {}
+#   cart.each do |item|
+#     item.each do |name, attributes|
+#       counts[name] = cart.select{|other_item| other_item == item}.size
+#     end
+#   end
+#   counts
+# end
 
-#adds count to the items in the cart
-def update_cart_counts(cart, counts)
-  cart.uniq!
+# #adds count to the items in the cart
+# def update_cart_counts(cart, counts)
+#   cart.uniq!
+#   cart.each do |item|
+#     item.each do |name, attributes|
+#       counts.each do |item2, number|
+#         attributes[:count] = number if item2 == name
+#       end
+#     end
+#   end
+# end
+
+def update_cart(cart)
   cart.each do |item|
     item.each do |name, attributes|
-      counts.each do |item2, number|
-        attributes[:count] = number if item2 == name
-      end
+      attributes[:count] = cart.select{|other_item| other_item == item}.size
     end
   end
+  cart.uniq! {|item| item.keys}
 end
 
 def simple_cost(hash)
