@@ -36,5 +36,6 @@ class Grid
       puts
     end
     puts "\n\n"
+    sleep(0.5)
   end
 end
