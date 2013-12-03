@@ -1,7 +1,7 @@
 class Alive
   def flip_state(living)
     if living == 2 or living == 3
-      Alive.new
+      self
     else
       Dead.new
     end
@@ -10,7 +10,7 @@ end
 
 class Dead
   def flip_state(living)
-    living == 3 ? Alive.new : Dead.new
+    living == 3 ? Alive.new : self
   end
 end
 
