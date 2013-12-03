@@ -27,11 +27,7 @@ class Cell
   def alive?
     state.is_a?(Alive)
   end
-
-  def shortest_distance(cell1, cell2)
-    (cell1.x - cell2.x).abs ** 2 + (cell1.y - cell2.y).abs ** 2
-  end
-
+  
   def collect_neighbors
     neighbors = []
 

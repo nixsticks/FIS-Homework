@@ -22,19 +22,4 @@ class Grid
     cells.each {|position, cell| cell.compute_state }
     cells.each {|position, cell| cell.transition_state }
   end
-
-  # def printcells
-  #   array = []
-  #   y.times do
-  #     array << Array.new
-  #   end
-
-  #   cells.each {|position, cell| cell.alive? ? array[cell.y][cell.x] = "*" : array[cell.y][cell.x] = " "}
-  #   array.each do |inner_array|
-  #     inner_array.each {|x| print "#{x} "}
-  #     puts
-  #   end
-  #   puts "\n\n"
-  #   sleep(0.5)
-  # end
 end
