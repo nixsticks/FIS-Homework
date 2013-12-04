@@ -16,7 +16,7 @@ class Display
       inner_array.each {|x| print "#{x} "}
       puts
     end
-    puts "\n\n"
+    puts "\e[H"
     sleep(0.5)
   end
 
