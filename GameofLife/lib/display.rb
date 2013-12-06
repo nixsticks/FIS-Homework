@@ -1,29 +1,22 @@
-class Display
-  attr_reader :board
+puts `clear`
 
-  def initialize(board)
-    @board = board
+class Display
+  attr_reader :grid
+
+  def initialize(grid)
+    @grid = grid
   end
 
   def display
     array = []
-    board.y.times do
-      array << Array.new
-    end
+    grid.y.times { array << Array.new }
 
-    board.cells.each {|position, cell| cell.alive? ? array[cell.y][cell.x] = "*" : array[cell.y][cell.x] = " "}
-    array.each do |inner_array|
-      inner_array.each {|x| print "#{x} "}
-      puts
-    end
-    puts "\e[H"
-    sleep(0.5)
+    grid.cells.each {|position, cell| cell.alive? ? array[cell.y][cell.x] = "*" : array[cell.y][cell.x] = " "}
+    array.each {|inner_array| inner_array.each {|x| print "\e[?25l#{x} ".color(:magenta)}; puts}
+    puts "\e[H"; sleep(0.2)
   end
 
   def run
-    loop do
-      board.next_generation
-      display
-    end
+    loop {grid.next_generation; display}
   end
 end

@@ -29,16 +29,12 @@ class Cell
   end
   
   def collect_neighbors
-    neighbors = []
-
-    NEIGHBORS.each do |n|
+    NEIGHBORS.map do |n|
       n_x = x + n[0]
       n_y = y + n[1]
 
-      neighbors << grid.cells["#{n_x},#{n_y}"] if exists?(n_x) && exists?(n_y)
-    end
-
-    neighbors.compact
+      grid.cells["#{n_x},#{n_y}"] if exists?(n_x) && exists?(n_y)
+    end.compact
   end
 
   def exists?(number)
