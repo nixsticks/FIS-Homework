@@ -1,53 +1,93 @@
 require_relative '../lib/cell'
+require_relative '../lib/state'
 require_relative '../lib/grid'
 
-describe 'game of life' do
-  context 'live cell' do
-    it 'dies if it has fewer than 2 neighbors' do
-    end
-
-    it 'dies if it has more than 3 neighbors' do
-    end
-
-    it 'lives if it has 2 or 3 neighbors' do
-    end
-  end
-
-  context 'dead cell' do
-    it 'lives if it has 3 neighbors' do
-    end
-  end
-end
-
 describe Cell do
-  context 'cell methods' do
-    let(:cell) {Cell.new}
+  context 'alive' do
+    let(:grid) {Grid.new(4,4)}
+    let(:cell) {Cell.new(grid, 2, 2, Alive.new)}
 
-    it 'should keep track of its live neighbors' do
-      expect(cell.live_neighbors).to eq(0)
+    context 'with two or three live neighbors' do
+      it 'should remain alive' do
+        cell1 = Cell.new(grid, 2, 1, Alive.new)
+        cell2 = Cell.new(grid, 2, 3, Alive.new)
+
+        cell.compute_state
+        cell.transition_state
+        expect(cell.alive?).to be_true
+      end
     end
 
-    it 'should keep track of its alive or dead state' do
+    context 'with more than three live neighbors' do
+      it 'should die' do
+        cell1 = Cell.new(grid, 2, 1, Alive.new)
+        cell2 = Cell.new(grid, 2, 3, Alive.new)
+        cell3 = Cell.new(grid, 3, 3, Alive.new)
+        cell4 = Cell.new(grid, 1, 3, Alive.new)
 
+        cell.compute_state
+        cell.transition_state
+        expect(cell.alive?).to be_false
+      end
+    end
+
+    context 'with fewer than two live neighbors' do
+      it 'should die' do
+        cell1 = Cell.new(grid, 2, 1, Alive.new)
+
+        cell.compute_state
+        cell.transition_state
+        expect(cell.alive?).to be_false
+      end
+    end
+  end
+
+  context 'dead' do
+    let(:grid) {Grid.new(4,4)}
+    let(:cell) {Cell.new(grid, 2, 2, Dead.new)}
+
+    context 'with 3 live neighbors' do
+      it 'should come back to life' do
+        cell1 = Cell.new(grid, 2, 1, Alive.new)
+        cell2 = Cell.new(grid, 2, 3, Alive.new)
+        cell3 = Cell.new(grid, 3, 3, Alive.new)
+
+        cell.compute_state
+        cell.transition_state
+        expect(cell.alive?).to be_true
+      end
+    end
+
+    context 'with not enough live neighbors' do
+      it 'should stay dead' do
+        cell1 = Cell.new(grid, 2, 1, Alive.new)
+        cell2 = Cell.new(grid, 2, 3, Alive.new)
+
+        cell.compute_state
+        cell.transition_state
+        expect(cell.alive?).to be_false
+      end
     end
   end
 end
 
 describe Grid do
-  let(:grid) {Grid.new}
+  let(:grid) {Grid.new(4, 4)}
 
   it 'should keep track of all its cells' do
-    expect(grid.cells).to be_a_kind_of(Array)
+    cell1 = Cell.new(grid, 2, 1, Alive.new)
+    cell2 = Cell.new(grid, 2, 3, Alive.new)
+
+    expect(grid.cells.values).to include(cell1)
+    expect(grid.cells.values).to include(cell2)
   end
 
-  it 'should spawn a new live cell for empty positions with three live neighbors' do 
-  end
+  it 'should correctly create the next generation' do
+    cell1 = Cell.new(grid, 2, 1, Alive.new)
+    cell2 = Cell.new(grid, 2, 3, Alive.new)
 
-  it 'should be able to tell its cells to check their neighbors and live or die' do
-  end
-
-  it 'should populate a new board by collecting live cells' do
-    # should go through all its cells, check whether they're alive, and create a new board with the live cells plus any spawned ones.
-    expect(grid.next_generation).to be_a_kind_of(Grid)
+    grid.next_generation
+    expect(grid.cells["2,1"].alive?).to be(false)
+    expect(grid.cells["2,3"].alive?).to be(false)
   end
 end
