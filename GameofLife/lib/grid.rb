@@ -8,13 +8,19 @@ class Grid
     @y = y
   end
 
-  def populate
+  def populate_random
     x.times do |i|
       y.times do |j|
         r = rand(1..5)
         r < 3 ? state = Alive.new : state = Dead.new
         Cell.new(self, i, j, state)
       end
+    end
+  end
+
+  def populate_dead
+    x.times do |i|
+      y.times {|j| Cell.new(self, i, j, Dead.new)}
     end
   end
 

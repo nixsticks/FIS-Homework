@@ -2,9 +2,16 @@ require_relative 'grid'
 require_relative 'cell'
 require_relative 'state'
 require_relative 'display'
+require_relative 'patterns'
 require 'rainbow'
 
-grid = Grid.new(60, 30)
-grid.populate
+class Game
+  include Patterns
 
-Display.new(grid).run
+  attr_reader :grid, :display
+
+  def initialize(display)
+    @display = display
+    @grid = display.grid
+  end
+end

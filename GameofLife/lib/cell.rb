@@ -24,6 +24,10 @@ class Cell
     @state = @new_state
   end
 
+  def set_live
+    @state = Alive.new
+  end
+
   def alive?
     state.is_a?(Alive)
   end
