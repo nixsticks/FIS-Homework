@@ -13,7 +13,7 @@ class Display
 
     grid.cells.each {|position, cell| cell.alive? ? array[cell.y][cell.x] = "*" : array[cell.y][cell.x] = " "}
     array.each {|inner_array| inner_array.each {|x| print "\e[?25l#{x} ".color(:magenta)}; puts}
-    puts "\e[H"; sleep(0.2)
+    puts "\e[H"
   end
 
   def run
